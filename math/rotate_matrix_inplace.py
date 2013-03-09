@@ -16,18 +16,24 @@ matrix and works inwards.
 
 def rotate(m):
     n = len(m)
-    for level in range(n//2):
-        for i in range(n-1-2*level):
-            # set up temp variables
-            a = m[level][level+i] # top left element of orbit
-            b = m[level+i][n-1-level] # top right
-            c = m[n-1-level][n-1-level-i] # bottom right
-            d = m[n-1-level-i][level] # bottom left
-            # rotate the elements in current orbit
-            m[level][level+i] = b
-            m[level+i][n-1-level] = c
-            m[n-1-level][n-1-level-i] = d
-            m[n-1-level-i][level] = a
+    for layer in range(n//2):
+        # We move inwards from starting at the outer layer of the matrix.
+        # // is the integer division operation, we round down as for an odd
+        # sized matrix we don't need to rotate the center element.
+        for i in range(n-1-2*layer):
+            # We then circle around the current layer, we reduce the upper bound
+            # by 2*layer we lose both top/bottom and left/right sides of the
+            # outer matrix.
+            # FIRST: set up temp variables
+            a = m[layer][layer+i] # top left element of orbit
+            b = m[layer+i][n-1-layer] # top right
+            c = m[n-1-layer][n-1-layer-i] # bottom right
+            d = m[n-1-layer-i][layer] # bottom left
+            # SECOND: rotate the elements in current orbit
+            m[layer][layer+i] = d
+            m[layer+i][n-1-layer] = a
+            m[n-1-layer][n-1-layer-i] = b
+            m[n-1-layer-i][layer] = c
             
  
 def print_matrix(m):
